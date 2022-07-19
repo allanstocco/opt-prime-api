@@ -9,11 +9,11 @@ server.use(cors())
 const adminRoutes = require('./routes/admin')
 
 // USING ADMIN ROUTE (FULL ACCESS)
+server.use('/admin', adminRoutes);
+
 server.use('/', (req, res) => {
     res.send('Hello!')
 })
-
-server.use('/admin', adminRoutes);
 
 
 module.exports = server;
