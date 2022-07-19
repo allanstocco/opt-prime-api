@@ -11,8 +11,8 @@ async function LoginControl(req, res) {
 
         if (!authLogin) { throw new Error('No user with this email') }
 
-        const authenticated = req.body.user_password === authLogin.password;
-
+        const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
+       
         if (!!authenticated) {
 
             const maxAge = 3 * 60 * 60;
