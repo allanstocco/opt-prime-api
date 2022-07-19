@@ -7,13 +7,21 @@ module.exports = class Account {
     static Authorization(credencial) {
         return new Promise((resolve, reject) => {
             try {
-                
+
                 const email = credencial.email;
                 const pass = credencial.user_password
 
                 if (email && pass) {
-                    let user = optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ? AND user_password = ?;', [email, pass])
-                    resolve(user)
+                    optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ? AND user_password = ?', [email, pass], (err, rows) => {
+                        if (err) {
+
+                            return console.log(err.message)
+                            
+                        } else {
+                            console.log(rows)
+                            resolve(rows)
+                        }
+                    })
                 } else {
                     console.log('Wierd')
                 }
