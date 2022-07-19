@@ -2,32 +2,51 @@ const optimizePrimeDB = require('../db/db');
 
 
 module.exports = class Account {
-    constructor() { };
+    constructor(data) {
+        this.id = data.account_id
+        this.email = data.email
+        this.firstname = data.firstname
+        this.lastname = data.lastname
+        this.password = data.user_password
+        this.is_superuser = data.is_superuser
+    };
 
-    static Authorization(credencial) {
-        return new Promise((resolve, reject) => {
+
+    static newAccount({ email, firstname, lastname, user_password }) {
+        return new Promise(async (resolve, reject) => {
             try {
 
-                const email = credencial.email;
-                const pass = credencial.user_password
+                const is_superuser = 0;
 
-                if (email && pass) {
-                    optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ? AND user_password = ?', [email, pass], (err, rows) => {
-                        if (err) {
+                const result = optimizePrimeDB.run('INSERT INTO user_account (email, firstname, lastname, user_password, is_superuser) VALUES (?,?,?,?,?)', [email, firstname, lastname, user_password, is_superuser]);
 
-                            return console.log(err.message)
-                            
-                        } else {
-                            console.log(rows)
-                            resolve(rows)
-                        }
-                    })
-                } else {
-                    console.log('Wierd')
-                }
+                let new_account = new Account(result);
+
+                resolve(new_account)
 
             } catch (err) {
-                console.log('Not Good' + err)
+
+                reject(`Error creating user: ${err}`)
+            }
+        })
+    }
+
+    static Login(email) {
+        return new Promise((resolve, reject) => {
+            try {
+                optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ?', [email], (err, rows) => {
+                    if (err) {
+
+                        return console.log(err.message)
+
+                    } else {
+
+                        let log = new Account(rows)
+                        resolve(log)
+                    }
+                })
+            } catch (err) {
+                console.log('Server' + err)
             }
         })
     };
