@@ -6,6 +6,9 @@ const Account = require('../models/Login');
 const jwtSecret = "8e180f5b52f9be27c82f77b475590fc7e7cd424da37e11d5a61d9f3be8678292b9d873"
 
 async function LoginControl(req, res) {
+
+    console.log(req.body)
+
     try {
         const authLogin = await Account.Login(req.body.email);
 
@@ -54,7 +57,7 @@ async function newUserAccount(req, res) {
         await Account.newAccount({ ...req.body, user_password: hashed })
 
         res.status(201).json({ msg: 'New User Successfully Created' })
-        
+
     } catch (err) {
 
         res.status(500).json({ err });
