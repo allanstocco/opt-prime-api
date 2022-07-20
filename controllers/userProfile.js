@@ -2,8 +2,7 @@ const Profile = require('../models/UserProfile')
 
 async function UserProfile(req, res) {
 
-    const userID = parseInt(req.params.id);
-    console.log(req.cookies)
+    const userID = req.userID
    
     const user_profile = await Profile.ProfileData(userID)
 

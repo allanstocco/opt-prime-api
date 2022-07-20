@@ -2,12 +2,17 @@ const optimizePrimeDB = require('../db/db');
 
 
 module.exports = class Profile {
-    constructor() { };
+    constructor(data) {
+        this.id = data.user_id
+        this.nickname = data.nickname
+        this.bio = data.bio
+        this.birthday = data.birthday
+    };
 
-    static ProfileData(user) {
+    static ProfileData(userID) {
         return new Promise((resolve, reject) => {
             try {
-                optimizePrimeDB.get('SELECT * FROM user_profile WHERE user_id = ?', [user], (err, rows) => {
+                optimizePrimeDB.get('SELECT * FROM user_profile WHERE user_id = ?', [userID], (err, rows) => {
                     if (err) {
 
                         console.error(err.message)
@@ -22,5 +27,19 @@ module.exports = class Profile {
             }
         })
     };
+
+    static SetProfile(userID) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const result = optimizePrimeDB.run('INSERT INTO user_profile (user_id) VALUES (?)', [userID]);
+
+                let setting_profile = new Profile(result);
+
+                resolve(setting_profile)
+            } catch (err) {
+                reject('Error setting profile' + err)
+            }
+        })
+    }
 
 }

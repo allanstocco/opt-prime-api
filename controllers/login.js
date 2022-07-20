@@ -12,13 +12,16 @@ async function LoginControl(req, res) {
         if (!authLogin) { throw new Error('No user with this email') }
 
         const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
-       
+
         if (!!authenticated) {
 
             const maxAge = 3 * 60 * 60;
 
             const token = jwt.sign(
-                { id: authLogin.id },
+                {
+                    superuser: authLogin.is_superuser,
+                    id: authLogin.id
+                },
                 jwtSecret,
                 {
                     expiresIn: maxAge,
@@ -34,9 +37,8 @@ async function LoginControl(req, res) {
 
         } else {
 
-            throw new Error('USER NOT AUTHENTICADED')
+            throw new Error('USER NOT AUTHENTICATED')
         }
-
 
     } catch (err) {
         res.status(500).send(err);
@@ -44,15 +46,15 @@ async function LoginControl(req, res) {
 }
 
 async function newUserAccount(req, res) {
-    try {
 
+    try {
         const salt = await bcrypt.genSalt();
         const hashed = await bcrypt.hash(req.body.user_password, salt)
 
         await Account.newAccount({ ...req.body, user_password: hashed })
 
         res.status(201).json({ msg: 'New User Successfully Created' })
-
+        
     } catch (err) {
 
         res.status(500).json({ err });

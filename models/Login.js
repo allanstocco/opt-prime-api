@@ -1,5 +1,6 @@
 const optimizePrimeDB = require('../db/db');
 
+const Profile = require('./UserProfile')
 
 module.exports = class Account {
     constructor(data) {
@@ -18,7 +19,11 @@ module.exports = class Account {
 
                 const is_superuser = 0;
 
-                const result = optimizePrimeDB.run('INSERT INTO user_account (email, firstname, lastname, user_password, is_superuser) VALUES (?,?,?,?,?)', [email, firstname, lastname, user_password, is_superuser]);
+                const result = optimizePrimeDB.run('INSERT INTO user_account (email, firstname, lastname, user_password, is_superuser) VALUES (?,?,?,?,?) RETURNING *;', [email, firstname, lastname, user_password, is_superuser]);
+
+                optimizePrimeDB.get('SELECT last_insert_rowid();', (err, rows) => {
+                    Profile.SetProfile(rows['last_insert_rowid()'])
+                })
 
                 let new_account = new Account(result);
 
