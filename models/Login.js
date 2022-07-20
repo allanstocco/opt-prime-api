@@ -4,7 +4,7 @@ const Profile = require('./UserProfile')
 
 module.exports = class Account {
     constructor(data) {
-        this.id = data.account_id
+        this.account_id = data.account_id
         this.email = data.email
         this.firstname = data.firstname
         this.lastname = data.lastname
@@ -44,7 +44,8 @@ module.exports = class Account {
 
                     } else {
 
-                        resolve(rows)
+                        const resolved = new Account(rows)
+                        resolve(resolved)
                     }
                 })
             } catch (err) {
