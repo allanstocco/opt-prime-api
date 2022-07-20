@@ -21,7 +21,7 @@ async function LoginControl(req, res) {
                 const token = jwt.sign(
                     {
                         superuser: authLogin.is_superuser,
-                        id: authLogin.id
+                        id: authLogin.account_id
                     },
                     jwtSecret,
                     {
