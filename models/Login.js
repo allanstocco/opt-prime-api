@@ -4,6 +4,7 @@ const Profile = require('./UserProfile')
 
 module.exports = class Account {
     constructor(data) {
+        this.account_id = data.account_id
         this.email = data.email
         this.firstname = data.firstname
         this.lastname = data.lastname
