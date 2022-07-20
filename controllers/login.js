@@ -7,45 +7,44 @@ const jwtSecret = "8e180f5b52f9be27c82f77b475590fc7e7cd424da37e11d5a61d9f3be8678
 
 async function LoginControl(req, res) {
 
-    console.log(req.body)
+        try {
+            const authLogin = await Account.Login(req.body.email);
 
-    try {
-        const authLogin = await Account.Login(req.body.email);
+            if (!authLogin) { throw new Error('No user with this email') }
 
-        if (!authLogin) { throw new Error('No user with this email') }
+            const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
 
-        const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
+            if (!!authenticated) {
 
-        if (!!authenticated) {
+                const maxAge = 3 * 60 * 60;
 
-            const maxAge = 3 * 60 * 60;
+                const token = jwt.sign(
+                    {
+                        superuser: authLogin.is_superuser,
+                        id: authLogin.id
+                    },
+                    jwtSecret,
+                    {
+                        expiresIn: maxAge,
+                    }
+                );
 
-            const token = jwt.sign(
-                {
-                    superuser: authLogin.is_superuser,
-                    id: authLogin.id
-                },
-                jwtSecret,
-                {
-                    expiresIn: maxAge,
-                }
-            );
+                res.cookie("jwt", token, {
+                    httpOnly: true,
+                    maxAge: maxAge * 1000,
+                });
 
-            res.cookie("jwt", token, {
-                httpOnly: true,
-                maxAge: maxAge * 1000,
-            });
+                res.status(200).json(authLogin)
 
-            res.status(200).json(authLogin)
+            } else {
 
-        } else {
+                throw new Error('USER NOT AUTHENTICATED')
+            }
 
-            throw new Error('USER NOT AUTHENTICATED')
+        } catch (err) {
+            res.status(500).send(err);
         }
-
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    
 }
 
 async function newUserAccount(req, res) {

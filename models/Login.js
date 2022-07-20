@@ -44,8 +44,13 @@ module.exports = class Account {
 
                     } else {
 
-                        const resolved = new Account(rows)
-                        resolve(resolved)
+                        if (rows === undefined) {
+                            reject(rows)
+                        } else {
+
+                            const resolved = new Account(rows)
+                            resolve(resolved)
+                        }
                     }
                 })
             } catch (err) {
