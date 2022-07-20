@@ -35,11 +35,11 @@ module.exports = class Account {
     }
 
     static Login(email) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
                 optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ?', [email], (err, rows) => {
                     if (err) {
-                        
+
                         return console.log(err.message)
 
                     } else {
