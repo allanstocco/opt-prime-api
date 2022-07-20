@@ -39,13 +39,12 @@ module.exports = class Account {
             try {
                 optimizePrimeDB.get('SELECT * FROM user_account WHERE email = ?', [email], (err, rows) => {
                     if (err) {
-
+                        
                         return console.log(err.message)
 
                     } else {
 
-                        let log = new Account(rows)
-                        resolve(log)
+                        resolve(rows)
                     }
                 })
             } catch (err) {
