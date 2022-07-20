@@ -25,9 +25,7 @@ module.exports = class Account {
                     Profile.SetProfile(rows['last_insert_rowid()'])
                 })
 
-                let new_account = new Account(result);
-
-                resolve(new_account)
+                resolve(result)
 
             } catch (err) {
 
