@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const jwtSecret = "8e180f5b52f9be27c82f77b475590fc7e7cd424da37e11d5a61d9f3be8678292b9d873"
+const jwtSecret = process.env.ACCESS_TOKEN_SECRET;
 
 function adminAuth(req, res, next) {
     const token = req.cookies.jwt

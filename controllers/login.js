@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const Account = require('../models/Login');
 
-const jwtSecret = "8e180f5b52f9be27c82f77b475590fc7e7cd424da37e11d5a61d9f3be8678292b9d873"
+const jwtSecret = process.env.ACCESS_TOKEN_SECRET;
 
 async function LoginControl(req, res) {
 
