@@ -5,10 +5,10 @@ const router = express.Router();
 let adminAuth = require('../services/auth')
 
 //IMPORT ADMIN CONTROLLER 
-const admin = require('../controllers/habits');
+const habits = require('../controllers/habits');
 
 // ROUTES
-router.get('/');
+router.post('/new-habit', habits.createHabit);
 
 
 module.exports = router

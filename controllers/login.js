@@ -7,44 +7,44 @@ const jwtSecret = process.env.ACCESS_TOKEN_SECRET;
 
 async function LoginControl(req, res) {
 
-        try {
-            const authLogin = await Account.Login(req.body.email);
+    try {
+        const authLogin = await Account.Login(req.body.email);
 
-            if (!authLogin) { throw new Error('No user with this email') }
+        if (!authLogin) { throw new Error('No user with this email') }
 
-            const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
+        const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
 
-            if (!!authenticated) {
+        if (!!authenticated) {
 
-                const maxAge = 3 * 60 * 60;
+            const maxAge = 3 * 60 * 60;
 
-                const token = jwt.sign(
-                    {
-                        superuser: authLogin.is_superuser,
-                        id: authLogin.account_id
-                    },
-                    jwtSecret,
-                    {
-                        expiresIn: maxAge,
-                    }
-                );
+            const token = jwt.sign(
+                {
+                    superuser: authLogin.is_superuser,
+                    id: authLogin.account_id
+                },
+                jwtSecret,
+                {
+                    expiresIn: maxAge,
+                }
+            );
 
-                res.cookie("jwt", token, {
-                    httpOnly: true,
-                    maxAge: maxAge * 1000,
-                });
+            res.cookie("jwt", token, {
+                httpOnly: true,
+                maxAge: maxAge * 1000,
+            });
 
-                res.status(200).json(authLogin)
+            res.status(200).json({ "Token": req.cookies.jwt })
 
-            } else {
+        } else {
 
-                throw new Error('USER NOT AUTHENTICATED')
-            }
-
-        } catch (err) {
-            res.status(500).send(err);
+            throw new Error('USER NOT AUTHENTICATED')
         }
-    
+
+    } catch (err) {
+        res.status(500).send(err);
+    }
+
 }
 
 async function newUserAccount(req, res) {

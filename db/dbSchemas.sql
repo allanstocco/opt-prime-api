@@ -28,11 +28,16 @@ CREATE TABLE user_profile (
 DROP TABLE IF EXISTS habits;
 CREATE TABLE habits (
 	habits_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_id INTEGER
 	habit_name VARCHAR(30) NOT NULL,
 	goal INTEGER NOT NULL,
 	quantity INTEGER NOT NULL,
 	frequency INTEGER, 
-	completed BOOLEAN DEFAULT 0
+	completed BOOLEAN DEFAULT 0,
+
+	CONSTRAINT user_fk
+		FOREIGN KEY(user_id)
+			REFERENCES user_profile(user_id) ON DELETE CASCADE,
 	
 );
 
@@ -46,17 +51,17 @@ CREATE TABLE user_habit (
 	completed BOOLEAN DEFAULT 0,
 	CONSTRAINT user_fk
 		FOREIGN KEY(user_id)
-		REFERENCES user_profile(user_id) ON DELETE CASCADE,
+			REFERENCES user_profile(user_id) ON DELETE CASCADE,
 		
 	CONSTRAINT habits_fk
 		FOREIGN KEY(habits_id)
-		REFERENCES habits(habits_id) ON DELETE CASCADE
+			REFERENCES habits(habits_id) ON DELETE CASCADE
 );
 
 
 
 INSERT INTO user_account (email, firstname, lastname, user_password, is_superuser) VALUES (
-	'allanstocco@hotmail.com', 'Allan', 'Stocco', 'asr130690xxbuhxx', '1'
+	'allanstocco@hotmail.com', 'Allan', 'Stocco', '123456', '1'
 );
 
 INSERT INTO user_profile (user_id, nickname, bio, birthday) VALUES (
@@ -69,5 +74,16 @@ INSERT INTO  habits (habit_name, goal, quantity, frequency) VALUES (
 );
 
 INSERT INTO  user_habit (user_id, habits_id, initial_date, end_date) VALUES (
-	1, 1, '2022/07/18', '2022/07/25'
+	1, 1, '2022-07-18', '2022-07-25'
 );
+
+SELECT
+  initial_date,
+  end_date,
+  JULIANDAY(end_date) - JULIANDAY(initial_date) AS INTEGER
+FROM user_habit;
+
+
+INSERT INTO habits (user_id, habit_name, goal, quantity, frequency) VALUES (
+	1,WATER,8,0,3
+)

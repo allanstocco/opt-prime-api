@@ -1,11 +1,16 @@
-const Habits = require('../models/UserProfile')
+const Habits = require('../models/Habits')
 
-async function userHabits(req, res) {
+async function createHabit(req, res) {
 
+    const userID = req.userID
+
+    const user_profile = await Habits.createHabit()
+
+    res.status(201).json(user_profile)
 
 }
 
 
 module.exports = {
-    userHabits
+    createHabit
 }
