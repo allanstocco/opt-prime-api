@@ -45,11 +45,12 @@ module.exports = class Profile {
     static UpdateProfile(picture, nickname, bio, birthday, userID) {
         return new Promise(async (resolve, reject) => {
             try {
-                const result = optimizePrimeDB.run('UPDATE user_profile SET picture = ?, nickname = ?, bio = ?, birthday = ? WHERE user_id = ?', [picture, nickname, bio, birthday, userID])
+                const result = optimizePrimeDB.run('UPDATE user_profile SET picture = ?, nickname = ?, bio = ?, birthday = ? WHERE user_id = ? RETURNING *;', [picture, nickname, bio, birthday, userID])
 
                 let update_profile = new Profile(result)
 
                 resolve(update_profile)
+                
             } catch (err) {
                 reject('Error updating profile')
             }

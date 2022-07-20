@@ -13,7 +13,7 @@ async function UpdateProfile(req, res) {
 
     const userID = req.userID
 
-    const update_profile = await Profile.UpdateProfile(...req.body, userID)
+    const update_profile = await Profile.UpdateProfile(req.body.picture, req.body.nickname, req.body.bio, req.body.birthday, userID)
 
     res.status(201).json(update_profile)
 }
