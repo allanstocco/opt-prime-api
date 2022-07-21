@@ -14,6 +14,7 @@ router.post('/new-habit', Auth.authUser, habits.createHabit);
 
 // DAY HABITS ROUTES
 router.get('/days/:id', Auth.authUser, days_habits.showHabitDays)
+router.post('/setday', Auth.authUser, days_habits.setCompletion)
 
 
 module.exports = router
