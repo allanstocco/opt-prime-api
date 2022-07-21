@@ -12,7 +12,7 @@ module.exports = class DailyHabits {
     static showDays(user_habit_id) {
         return new Promise(async (resolve, reject) => {
             try {
-                optimizePrimeDB.all('SELECT firstname, user_habit.habit_name, user_habit.goal, daily_habit_user.day_date, daily_habit_user.completed FROM user_account INNER JOIN user_habit ON user_account.account_id = user_habit.user_id INNER JOIN daily_habit_user ON user_habit.user_habit_id = daily_habit_user.user_habit_id WHERE user_habit.user_habit_id = ?;', [user_habit_id], (err, rows) => {
+                optimizePrimeDB.all('SELECT firstname, user_habit.habit_name, user_habit.goal, daily_habit_user.daily_habit_id, daily_habit_user.completed FROM user_account INNER JOIN user_habit ON user_account.account_id = user_habit.user_id INNER JOIN daily_habit_user ON user_habit.user_habit_id = daily_habit_user.user_habit_id WHERE user_habit.user_habit_id = ?;', [user_habit_id], (err, rows) => {
                     if (err) {
 
                         console.error(err.message)
@@ -54,5 +54,22 @@ module.exports = class DailyHabits {
             }
         })
     };
+
+    static checkDay(checked) {
+        return new Promise(async (resolve, reject) => {
+            try{
+                optimizePrimeDB.run('UPDATE INTO daily_habit_user SET completed = ? WHERE daily_habit_id = ?;', [checked], (err, rows) => {
+                    if (err) {
+                        console.error(err.message)
+                        reject(err);
+                    } else {
+                        resolve(rows)
+                    }
+                })
+            } catch (err) {
+
+            }
+        })
+    }
 
 }
