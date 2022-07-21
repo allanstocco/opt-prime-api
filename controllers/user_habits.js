@@ -30,6 +30,8 @@ async function showHabitDays(req, res) {
 
 async function setCompletion(req, res) {
 
+    
+
     const set_done = await UserDaysHabits.checkDay(req.body.completed, req.body.user_habit_id, req.body.daily_habit_id)
 
     res.status(201).json(set_done)

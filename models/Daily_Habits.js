@@ -58,7 +58,7 @@ module.exports = class DailyHabits {
     static checkDay(completed, habitID, dayID) {
         return new Promise(async (resolve, reject) => {
             try {
-                optimizePrimeDB.run('UPDATE INTO daily_habit_user SET completed = ? WHERE user_habit_id = ? AND daily_habit_id = ?;', [completed, habitID, dayID], (err, rows) => {
+                optimizePrimeDB.run('UPDATE daily_habit_user SET completed = ? WHERE user_habit_id = ? AND daily_habit_id = ?;', [completed, habitID, dayID], (err, rows) => {
                     if (err) {
                         console.error(err.message)
                         reject(err);
