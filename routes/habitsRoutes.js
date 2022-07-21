@@ -2,13 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 // MIDDLEWARE CHECK AUTHORIZATION
-let adminAuth = require('../services/auth')
+let Auth = require('../services/auth')
 
 //IMPORT ADMIN CONTROLLER 
-const habits = require('../controllers/habits');
+const habits = require('../controllers/user_habits');
+const days_habits = require('../controllers/user_habits');
 
-// ROUTES
-router.post('/new-habit', habits.createHabit);
+// HABITS ROUTES
+router.get('/', Auth.authUser, habits.showHabits)
+router.post('/new-habit', Auth.authUser, habits.createHabit);
+
+// DAY HABITS ROUTES
+router.get('/days/:id', Auth.authUser, days_habits.showHabitDays)
 
 
 module.exports = router

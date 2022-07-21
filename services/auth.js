@@ -24,7 +24,7 @@ function adminAuth(req, res, next) {
     }
 }
 
-function authProfile(req, res, next) {
+function authUser(req, res, next) {
 
     const authHeader = req.headers['authorization']
     const authToken = req.cookies.jwt
@@ -44,4 +44,4 @@ function authProfile(req, res, next) {
 
 }
 
-module.exports = { adminAuth, authProfile }
+module.exports = { adminAuth, authUser }

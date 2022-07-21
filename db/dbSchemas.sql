@@ -26,18 +26,15 @@ CREATE TABLE user_profile (
 
 
 DROP TABLE IF EXISTS habits;
-CREATE TABLE habits (
-	habits_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	user_id INTEGER
-	habit_name VARCHAR(30) NOT NULL,
-	goal INTEGER NOT NULL,
-	quantity INTEGER NOT NULL,
-	frequency INTEGER, 
+CREATE TABLE daily_habit_user (
+	daily_habit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_habit_id INTEGER,
+	day_date DATE, 
 	completed BOOLEAN DEFAULT 0,
 
 	CONSTRAINT user_fk
-		FOREIGN KEY(user_id)
-			REFERENCES user_profile(user_id) ON DELETE CASCADE,
+		FOREIGN KEY(user_habit_id)
+			REFERENCES user_habit(user_habit_id) ON DELETE CASCADE
 	
 );
 
@@ -45,17 +42,16 @@ DROP TABLE IF EXISTS user_habit;
 CREATE TABLE user_habit (
 	user_habit_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	user_id INTEGER,
-	habits_id INTEGER,
+	habit_name VARCHAR(30) NOT NULL,
+	goal INTEGER NOT NULL,
+	quantity INTEGER NOT NULL,
+	frequency INTEGER, 
 	initial_date DATE NOT NULL,
 	end_date DATE NOT NULL,
-	completed BOOLEAN DEFAULT 0,
 	CONSTRAINT user_fk
 		FOREIGN KEY(user_id)
-			REFERENCES user_profile(user_id) ON DELETE CASCADE,
+			REFERENCES user_profile(user_id) ON DELETE CASCADE
 		
-	CONSTRAINT habits_fk
-		FOREIGN KEY(habits_id)
-			REFERENCES habits(habits_id) ON DELETE CASCADE
 );
 
 
@@ -87,3 +83,10 @@ FROM user_habit;
 INSERT INTO habits (user_id, habit_name, goal, quantity, frequency) VALUES (
 	1,WATER,8,0,3
 )
+
+
+SELECT user_account.firstname, habit_name, goal, quantity, frequency, daily_habit_user.day_date, daily_habit_user.completed FROM user_account, user_habit INNER JOIN daily_habit_user ON user_habit.user_id = daily_habit_user.user_habit_id;
+
+
+### QUERY EXACLY THE PERSON HABITS DAYS
+select firstname, user_habit.habit_name, user_habit.goal, daily_habit_user.day_date, daily_habit_user.completed from user_account inner join user_habit ON user_account.account_id = user_habit.user_id INNER JOIN daily_habit_user ON user_habit.user_habit_id = daily_habit_user.user_habit_id WHERE user_habit.user_habit_id = 10;
