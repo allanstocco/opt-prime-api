@@ -15,29 +15,18 @@ async function LoginControl(req, res) {
         const authenticated = await bcrypt.compare(req.body.user_password, authLogin.password);
 
         if (!!authenticated) {
-
-            const maxAge = 3 * 60 * 60;
-
-            const token = jwt.sign(
-                {
-                    superuser: authLogin.is_superuser,
-                    id: authLogin.account_id
-                },
-                jwtSecret,
-                {
-                    expiresIn: maxAge,
+            const sendToken = (err, token) => {
+                if (err) {
+                    throw new Error("Token Error")
                 }
-            );
+                res.status(200).json({
+                    'token': token
+                })
+            }
 
-            res.cookie("jwt", token, {
-                httpOnly: true,
-                maxAge: maxAge * 1000,
-            });
-
-            res.status(200).json({ "Token": req.cookies.jwt })
+            jwt.sign({ superuser: authLogin.is_superuser, id: authLogin.account_id }, jwtSecret, { expiresIn: 3 * 60 * 60 }, sendToken);
 
         } else {
-
             throw new Error('USER NOT AUTHENTICATED')
         }
 
