@@ -9,7 +9,8 @@ const admin = require('../controllers/admin');
 
 // ROUTES
 router.get('/accounts', adminAuth.adminAuth, admin.Accounts);
-router.get('/profile', adminAuth.adminAuth, admin.Profiles)
+router.get('/profile', adminAuth.adminAuth, admin.Profiles);
+router.get('/habits', adminAuth.adminAuth, admin.AllHabits);
 
 
 module.exports = router

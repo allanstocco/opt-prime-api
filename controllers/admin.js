@@ -18,8 +18,18 @@ function Profiles(req, res) {
     }
 }
 
+function AllHabits(req, res) {
+    try {
+        const habits = Admin.AllHabits;
+        habits.then(response => res.send(response))
+    } catch (err) {
+        res.status(500).send(err)
+    }
+}
+
 
 module.exports = {
     Accounts,
-    Profiles
+    Profiles,
+    AllHabits
 }
